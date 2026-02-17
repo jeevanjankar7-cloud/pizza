@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campus Pizza</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <div id="overlay" class="overlay hidden"></div>
+
+    <aside id="menuDrawer" class="drawer-left" aria-hidden="true">
+      <div class="drawer-header">
+        <h2>Menu</h2>
+        <button id="closeMenuBtn" class="small-btn" type="button">Close</button>
+      </div>
+      <button class="drawer-link" data-view-target="home">Home</button>
+      <button class="drawer-link" data-view-target="favorites">Favorites</button>
+      <button class="drawer-link" data-view-target="custom">Build Pizza</button>
+      <button class="drawer-link" data-view-target="settings">Settings</button>
+      <button id="openOrdersBtn" class="drawer-link" type="button">Order History</button>
+      <button id="openStoreInfoBtn" class="drawer-link" type="button">Store Info</button>
+    </aside>
+
+    <aside id="cartDrawer" class="drawer-right" aria-hidden="true">
+      <div class="drawer-header">
+        <h2>Your Cart</h2>
+        <button id="closeCartBtn" class="small-btn" type="button">Close</button>
+      </div>
+      <ul id="cartList" class="list-reset"></ul>
+      <p id="cartEmptyText" class="muted-text">Your cart is empty.</p>
+      <div class="cart-footer">
+        <p>Total: <strong id="cartSubtotal">Rs. 0</strong></p>
+      </div>
+      <div class="inline-actions">
+        <button id="clearCartBtn" class="small-btn" type="button">Clear Cart</button>
+        <button id="checkoutBtn" class="primary-btn" type="button">Checkout</button>
+      </div>
+    </aside>
+
+    <aside id="userDrawer" class="drawer-right" aria-hidden="true">
+      <div class="drawer-header">
+        <h2>Account</h2>
+        <button id="closeUserBtn" class="small-btn" type="button">Close</button>
+      </div>
+      <label for="profileName" class="input-label">Profile Name</label>
+      <input id="profileName" class="text-input" type="text" placeholder="Enter your name" />
+      <p id="accountStatus" class="muted-text">Status: Guest</p>
+      <div class="inline-actions">
+        <button id="saveProfileBtn" class="small-btn" type="button">Save</button>
+        <button id="toggleSignBtn" class="small-btn" type="button">Sign In</button>
+      </div>
+      <button id="viewRewardsBtn" class="primary-btn full-width" type="button">View Rewards</button>
+    </aside>
+
+    <div id="dialog" class="dialog hidden" aria-hidden="true">
+      <div class="dialog-box">
+        <h3 id="dialogTitle">Details</h3>
+        <p id="dialogMessage"></p>
+        <button id="closeDialogBtn" class="primary-btn" type="button">Okay</button>
+      </div>
+    </div>
+
+    <div class="phone-layout">
+      <div class="layout-wrap">
+        <nav class="bottom-nav">
+          <button class="nav-btn nav-active" data-view="home" aria-label="Home" type="button">&#8962;</button>
+          <button class="nav-btn" data-view="favorites" aria-label="Favorites" type="button">&#9825;</button>
+          <button class="nav-btn nav-add-btn" data-view="custom" aria-label="Build Pizza" type="button">+</button>
+          <button class="nav-btn" data-action="open-cart" aria-label="Cart" type="button">&#128722;</button>
+          <button class="nav-btn" data-view="settings" aria-label="Settings" type="button">&#9881;</button>
+        </nav>
+
+        <div class="main-column">
+          <header class="top-bar">
+            <button id="menuBtn" class="icon-btn" aria-label="Menu" type="button">&#9776;</button>
+            <h1 class="app-title">Campus Pizza</h1>
+            <button id="userBtn" class="user-icon" aria-label="User" type="button">U</button>
+          </header>
+
+          <section class="status-strip">
+            <span>Delivery in 20-30 min</span>
+            <span id="cartCountText">0 items</span>
+          </section>
+
+          <section class="search-row">
+            <input id="searchInput" class="search-input" type="text" placeholder="Search pizzas..." />
+            <button id="topCartBtn" class="icon-btn" aria-label="Cart" type="button">&#128722;</button>
+          </section>
+
+          <section id="categoryRow" class="category-row"></section>
+
+          <main class="content-area">
+            <section id="homeView" class="view-section active-view">
+              <div class="section-head">
+                <h2>Popular Pizzas</h2>
+                <span id="itemCountText" class="muted-text"></span>
+              </div>
+              <ul id="pizzaList" class="pizza-grid list-reset"></ul>
+
+              <section class="card-box">
+                <label for="instructionsInput" class="input-label">Special Instructions</label>
+                <input
+                  id="instructionsInput"
+                  class="text-input"
+                  type="text"
+                  placeholder="E.g. Extra oregano, cut in squares"
+                />
+                <p class="helper-text">This note is used when you build your own pizza.</p>
+                <div class="inline-actions">
+                  <button id="saveInstructionBtn" class="small-btn" type="button">Save</button>
+                  <button id="clearInstructionBtn" class="small-btn" type="button">Clear</button>
+                </div>
+              </section>
+            </section>
+
+            <section id="favoritesView" class="view-section">
+              <div class="section-head">
+                <h2>Favorites</h2>
+              </div>
+              <ul id="favoritesList" class="pizza-grid list-reset"></ul>
+              <p id="favoritesEmptyText" class="muted-text">No favorites yet.</p>
+            </section>
+
+            <section id="customView" class="view-section">
+              <div class="section-head">
+                <h2>Build Your Pizza</h2>
+              </div>
+              <form id="customForm" class="card-box">
+                <label for="pizzaBase" class="input-label">Base</label>
+                <select id="pizzaBase" class="text-input">
+                  <option value="Margherita">Margherita</option>
+                  <option value="Farmhouse">Farmhouse</option>
+                  <option value="Veggie Deluxe">Veggie Deluxe</option>
+                </select>
+
+                <label for="pizzaSize" class="input-label">Size</label>
+                <select id="pizzaSize" class="text-input">
+                  <option value="Small">Small</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Large">Large</option>
+                </select>
+
+                <label for="pizzaCrust" class="input-label">Crust</label>
+                <select id="pizzaCrust" class="text-input">
+                  <option value="Classic">Classic</option>
+                  <option value="Thin Crust">Thin Crust</option>
+                  <option value="Cheese Burst">Cheese Burst</option>
+                </select>
+
+                <label for="extraCheese" class="checkbox-row">
+                  <input id="extraCheese" type="checkbox" />
+                  <span>Add extra cheese (+Rs. 40)</span>
+                </label>
+
+                <div class="inline-actions">
+                  <button id="addCustomBtn" class="primary-btn" type="submit">Add to Cart</button>
+                  <button id="resetCustomBtn" class="small-btn" type="button">Reset</button>
+                </div>
+              </form>
+            </section>
+
+            <section id="settingsView" class="view-section">
+              <div class="section-head">
+                <h2>Settings</h2>
+              </div>
+              <div class="card-box">
+                <label class="checkbox-row" for="notifyToggle">
+                  <input id="notifyToggle" type="checkbox" checked />
+                  <span>Order notifications</span>
+                </label>
+                <label class="checkbox-row" for="newsletterToggle">
+                  <input id="newsletterToggle" type="checkbox" />
+                  <span>Promotional updates</span>
+                </label>
+                <div class="inline-actions">
+                  <button id="saveSettingsBtn" class="primary-btn" type="button">Save Settings</button>
+                  <button id="resetSettingsBtn" class="small-btn" type="button">Reset</button>
+                </div>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
